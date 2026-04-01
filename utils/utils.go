@@ -8,32 +8,29 @@ import (
 /* *
  * Environments [practising on maps]
  * */
-type EnvConfigVal struct {
-	Value string
-}
-
-type EnvConfig map[string](map[string]EnvConfigVal)
+type EnvConfigVal map[string]interface{}
+type EnvConfig map[string](EnvConfigVal)
 
 var Env = EnvConfig{
 	"prod": {
-		"port": {Value: "9000"},
+		"port": 2000,
 	},
 	"dev": {
-		"port": {Value: "8000"},
+		"port": 2000,
 	},
 	"test": {
-		"port": {Value: "7000"},
+		"port": 2000,
 	},
 }
 
 func RoundTo(f float64, p uint) float64 {
 	Env2 := make(EnvConfig)
 
-	Env2["UAT"] = map[string]EnvConfigVal{
-		"port": {Value: "80"},
+	Env2["UAT"] = EnvConfigVal{
+		"port": 8080,
 	}
 
-	fmt.Printf("%+v", Env2)
+	fmt.Printf("%v", Env2["UAT"])
 
 	r := math.Pow(10, float64(p))
 	return math.Round(f*r) / r
