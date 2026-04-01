@@ -2,6 +2,8 @@ package wallets
 
 import (
 	"testing"
+
+	"github.com/waw3ru/learning-go/utils"
 )
 
 func TestWallet(t *testing.T) {
@@ -17,14 +19,14 @@ func TestWallet(t *testing.T) {
 		}
 	}
 
-	assetError := func(t testing.TB, err, want error) {
+	assetError := func(t testing.TB, err, want *utils.CustomError) {
 		t.Helper()
 
 		if err == nil {
-			t.Fatal("wanted an error but didn't get one")
+			t.Fatal("didn't get an error but wanted one")
 		}
 
-		if err != want {
+		if err.Name != want.Name {
 			t.Errorf("got %q, want %q", err, want)
 		}
 	}
@@ -41,7 +43,7 @@ func TestWallet(t *testing.T) {
 
 	t.Run("can not withdraw more than balance", func(t *testing.T) {
 		err := w.Withdraw(Coin(100))
-		assetError(t, err, ErrInsufficientFunds)
+		assetError(t, err, utils.ThrowErr(ErrInsufficientFunds.Error(), "cannot withdraw, insufficient funds", nil))
 
 		currBal := Coin(60)
 		assert(t, w, currBal)
@@ -49,6 +51,6 @@ func TestWallet(t *testing.T) {
 
 	t.Run("can not deposit negative amount", func(t *testing.T) {
 		err := w.Deposit(Coin(-1))
-		assetError(t, err, NegativeAmountDeposit)
+		assetError(t, err, utils.ThrowErr(NegativeAmountDeposit.Error(), "wrong amount entered", nil))
 	})
 }

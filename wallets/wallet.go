@@ -23,9 +23,9 @@ type Wallet struct {
 	bal Coin
 }
 
-func (w *Wallet) Deposit(amount Coin) error {
+func (w *Wallet) Deposit(amount Coin) *utils.CustomError {
 	if amount < 1 {
-		return NegativeAmountDeposit
+		return utils.ThrowErr(NegativeAmountDeposit.Error(), "wrong amount entered", nil)
 	}
 	w.bal += amount
 	return nil
@@ -35,9 +35,9 @@ func (w *Wallet) Balance() Coin {
 	return w.bal
 }
 
-func (w *Wallet) Withdraw(amount Coin) error {
+func (w *Wallet) Withdraw(amount Coin) *utils.CustomError {
 	if amount > w.bal {
-		return ErrInsufficientFunds
+		return utils.ThrowErr(ErrInsufficientFunds.Error(), "cannot withdraw, insufficient funds", nil)
 	}
 	w.bal -= amount
 	return nil
