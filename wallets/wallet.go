@@ -1,7 +1,6 @@
 package wallets
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/waw3ru/learning-go/utils"
@@ -24,8 +23,12 @@ type Wallet struct {
 	bal Coin
 }
 
-func (w *Wallet) Deposit(amount Coin) {
+func (w *Wallet) Deposit(amount Coin) error {
+	if amount < 1 {
+		return NegativeAmountDeposit
+	}
 	w.bal += amount
+	return nil
 }
 
 func (w *Wallet) Balance() Coin {
@@ -34,7 +37,7 @@ func (w *Wallet) Balance() Coin {
 
 func (w *Wallet) Withdraw(amount Coin) error {
 	if amount > w.bal {
-		return errors.New("cannot withdraw more than balance")
+		return ErrInsufficientFunds
 	}
 	w.bal -= amount
 	return nil

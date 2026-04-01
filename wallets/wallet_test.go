@@ -17,10 +17,15 @@ func TestWallet(t *testing.T) {
 		}
 	}
 
-	assetError := func(t testing.TB, err error) {
+	assetError := func(t testing.TB, err, want error) {
 		t.Helper()
+
 		if err == nil {
-			t.Error("wanted an error but didn't get one")
+			t.Fatal("wanted an error but didn't get one")
+		}
+
+		if err != want {
+			t.Errorf("got %q, want %q", err, want)
 		}
 	}
 
@@ -36,9 +41,14 @@ func TestWallet(t *testing.T) {
 
 	t.Run("can not withdraw more than balance", func(t *testing.T) {
 		err := w.Withdraw(Coin(100))
-		assetError(t, err)
+		assetError(t, err, ErrInsufficientFunds)
 
 		currBal := Coin(60)
 		assert(t, w, currBal)
+	})
+
+	t.Run("can not deposit negative amount", func(t *testing.T) {
+		err := w.Deposit(Coin(-1))
+		assetError(t, err, NegativeAmountDeposit)
 	})
 }
