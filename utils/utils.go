@@ -5,7 +5,36 @@ import (
 	"math"
 )
 
+/* *
+ * Environments [practising on maps]
+ * */
+type EnvConfigVal struct {
+	Value string
+}
+
+type EnvConfig map[string](map[string]EnvConfigVal)
+
+var Env = EnvConfig{
+	"prod": {
+		"port": {Value: "9000"},
+	},
+	"dev": {
+		"port": {Value: "8000"},
+	},
+	"test": {
+		"port": {Value: "7000"},
+	},
+}
+
 func RoundTo(f float64, p uint) float64 {
+	Env2 := make(EnvConfig)
+
+	Env2["UAT"] = map[string]EnvConfigVal{
+		"port": {Value: "80"},
+	}
+
+	fmt.Printf("%+v", Env2)
+
 	r := math.Pow(10, float64(p))
 	return math.Round(f*r) / r
 }
