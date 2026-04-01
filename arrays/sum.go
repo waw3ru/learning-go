@@ -25,3 +25,22 @@ func TotalSum(nums ...[]int) (total int) {
 	return total
 
 }
+
+func SumTail(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	return Sum(nums[1:])
+}
+
+func SumAllTails(nums ...[]int) (sums []int) {
+	for _, num := range nums {
+		if len(num) == 0 {
+			sums = append(sums, 0)
+		} else {
+			sums = append(sums, SumTail(num))
+		}
+	}
+	return sums
+}
