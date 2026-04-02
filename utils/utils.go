@@ -62,3 +62,38 @@ func ThrowErr(name, message string, cause interface{}) *CustomError {
 		E:    cause,
 	}
 }
+
+/* *
+ * Functional Optional Pattern
+ * - Will be using a Server setup example
+ * */
+
+type Server struct {
+	port int
+	host string
+}
+
+type ServerOption func(*Server)
+
+func WithPort(port int) ServerOption {
+	return func(s *Server) {
+		s.port = port
+	}
+}
+
+func WithHost(host string) ServerOption {
+	return func(s *Server) {
+		s.host = host
+	}
+}
+
+func RunServer(options ...ServerOption) *Server {
+	s := &Server{
+		port: 8080,
+		host: "localhost",
+	}
+	for _, option := range options {
+		option(s)
+	}
+	return s
+}
