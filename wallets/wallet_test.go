@@ -7,9 +7,9 @@ import (
 )
 
 func TestWallet(t *testing.T) {
-	w := Wallet{}
+	w := &Wallet{}
 
-	assert := func(t testing.TB, wallet Wallet, want Coin) {
+	assert := func(t testing.TB, wallet *Wallet, want Coin) {
 		t.Helper()
 
 		got := wallet.Balance()

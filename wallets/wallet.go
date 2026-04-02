@@ -2,6 +2,7 @@ package wallets
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/waw3ru/learning-go/utils"
 )
@@ -20,13 +21,18 @@ func (b Coin) Float64() float64 {
 }
 
 type Wallet struct {
+	m   sync.Mutex
 	bal Coin
 }
 
 func (w *Wallet) Deposit(amount Coin) *utils.CustomError {
+	w.m.Lock()
+	defer w.m.Unlock()
+
 	if amount < 1 {
 		return utils.ThrowErr(NegativeAmountDeposit.Error(), "wrong amount entered", nil)
 	}
+
 	w.bal += amount
 	return nil
 }
@@ -36,9 +42,13 @@ func (w *Wallet) Balance() Coin {
 }
 
 func (w *Wallet) Withdraw(amount Coin) *utils.CustomError {
+	w.m.Lock()
+	defer w.m.Unlock()
+
 	if amount > w.bal {
 		return utils.ThrowErr(ErrInsufficientFunds.Error(), "cannot withdraw, insufficient funds", nil)
 	}
+
 	w.bal -= amount
 	return nil
 }
